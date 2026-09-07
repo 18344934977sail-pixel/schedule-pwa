@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f7fb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="我的课表">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="./logo.svg">
+<link rel="stylesheet" href="./app.css">
+<title>我的课表</title>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="brand"><img src="./logo.svg" alt="我的课表"><div><h1>我的课表</h1><p>2026–2027学年第1学期</p></div></div>
+    <div class="today-pill" id="todayLabel">—</div>
+  </div>
+
+  <section class="hero">
+    <div class="hero-main">
+      <div><div class="eyebrow">当前教学进度</div><h2 id="heroWeek">第—周</h2><div class="sub" id="heroRange">—</div></div>
+      <div class="hero-metric"><strong id="heroHours">0</strong><span>本周实际课时</span></div>
+    </div>
+    <div class="progress"><i id="termProgress"></i></div>
+    <div class="hero-foot"><span>第1周</span><span id="progressText">学期进度</span><span>第16周</span></div>
+  </section>
+
+  <div class="segment" role="tablist">
+    <button type="button" data-view="today" class="active">今日</button>
+    <button type="button" data-view="week">本周</button>
+    <button type="button" data-view="term">全学期</button>
+  </div>
+
+  <div class="toolrow"><span style="font-size:11px;color:#7a8494" id="filterSummary">执行课表 · 268课时</span><button type="button" id="filterBtn">筛选</button></div>
+  <div class="panel filterbox" id="filterBox">
+    <label>班级<select id="classFilter"><option value="-1">全部班级</option></select></label>
+    <label>课程<select id="courseFilter"><option value="-1">全部课程</option></select></label>
+    <label style="grid-column:1/-1">搜索<input id="searchInput" placeholder="教室 / 班级 / 课程"></label>
+  </div>
+
+  <section class="panel week-strip section" id="weekStrip"></section>
+
+  <div id="todayView">
+    <div class="section-title section"><h3>当天课程</h3><span id="daySummary">—</span></div>
+    <section class="panel timeline" id="dayTimeline"></section>
+    <div class="section-title section"><h3>下一节</h3><span>按实际执行课表</span></div>
+    <section class="panel next-card" id="nextClass"></section>
+  </div>
+
+  <div id="weekView" class="hidden">
+    <div class="desktop-grid">
+      <div>
+        <div class="section-title section"><h3>本周课程分布</h3><span id="weekSummary">—</span></div>
+        <section class="panel timeline" id="weekTimeline"></section>
+      </div>
+      <div>
+        <div class="section-title section"><h3>16周课时强度</h3><span>点击柱形切换周次</span></div>
+        <section class="panel week-bars" id="weekBars"></section>
+        <div class="kpis">
+          <section class="panel kpi"><strong id="kpiSessions">0</strong><span>本周课次</span></section>
+          <section class="panel kpi"><strong id="kpiCourses">0</strong><span>涉及课程</span></section>
+          <section class="panel kpi"><strong id="kpiClasses">0</strong><span>涉及班级</span></section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="termView" class="hidden">
+    <div class="section-title section"><h3>全学期结构</h3><span>实际执行口径</span></div>
+    <div class="term-grid">
+      <section class="panel donut-card"><div class="donut-wrap"><div class="donut"></div><div class="legend" id="courseLegend"></div></div></section>
+      <section class="panel class-bars" id="classBars"></section>
+    </div>
+    <div class="special"><b>第16周实训规则：</b>数字媒体技术2501进行《用户界面设计综合实训》。教师周一至周五1–6节带实训，只有7–8节可以正常上常规课；第16周周一7–8节《用户界面设计》正常保留。</div>
+    <div class="section-title section"><h3>全部课程明细</h3><span id="allSummary">—</span></div>
+    <section class="panel all-list" id="allList"></section>
+  </div>
+</div>
+<script src="./schedule-data.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
