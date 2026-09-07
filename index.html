@@ -2,11 +2,12 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#F5F7FB">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#F6F7FB">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="我的课表">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="./logo.svg">
 <link rel="apple-touch-icon" href="./logo.svg">
@@ -14,60 +15,101 @@
 <title>我的课表</title>
 </head>
 <body>
-<main class="app">
-  <header class="topbar card">
-    <div class="brand"><img src="./logo.svg" alt="我的课表"><div><h1>我的课表</h1><p>2026–2027 学年第1学期</p></div></div>
-    <div class="topmeta"><span class="pill" id="todayLabel">今天</span><span class="pill" id="weekLabel">第—周</span></div>
+<div class="app-shell">
+  <header class="app-header">
+    <div class="brand-row">
+      <div class="brand"><img src="./logo.svg" alt="我的课表"><div><h1>我的课表</h1><p id="todayText">—</p></div></div>
+      <button class="week-chip" id="weekPickerBtn" type="button"><span id="weekChipText">第—周</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.5 7.5 10 12l4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
   </header>
 
-  <section class="hero card">
-    <div class="hero-grid">
-      <div class="current-card">
-        <div class="eyebrow" id="heroEyebrow">当前教学周</div>
-        <h2 id="heroWeek">第—周</h2>
-        <p id="heroRange">—</p>
-        <div class="hero-stats"><div><strong id="heroHours">0</strong><span>本周课时</span></div><div><strong id="heroSessions">0</strong><span>本周课次</span></div><div><strong id="heroBusy">—</strong><span>最忙日</span></div></div>
-      </div>
-      <div class="hero-side">
-        <article class="focus-card"><div class="card-head"><h3>今天课程</h3><span id="todayHint">自动更新</span></div><div id="todayClasses"></div></article>
-        <article class="focus-card"><div class="card-head"><h3>下一节课程</h3><span>点击查看详情</span></div><div id="nextClass"></div></article>
-      </div>
+  <main>
+    <section class="screen" id="screen-schedule">
+      <section class="focus-card" id="focusCard">
+        <div class="focus-top"><span class="eyebrow">下一节课程</span><span class="focus-status" id="nextStatus">—</span></div>
+        <div id="nextLesson"></div>
+      </section>
+
+      <section class="section-block">
+        <div class="section-head"><div><h2>本周</h2><p id="weekRangeText">—</p></div><div class="week-summary" id="weekSummary">0 课时</div></div>
+        <div class="date-rail" id="dateRail"></div>
+      </section>
+
+      <section class="section-block">
+        <div class="section-head"><div><h2 id="dayTitle">今天课程</h2><p id="daySubtitle">—</p></div><button class="text-btn" id="goTodayBtn" type="button">今天</button></div>
+        <div class="agenda" id="dayAgenda"></div>
+      </section>
+
+      <section class="section-block">
+        <div class="section-head"><div><h2>本周总览</h2><p>按天查看整周课程，不需要横向拖大表格</p></div></div>
+        <div class="week-overview" id="weekOverview"></div>
+      </section>
+    </section>
+
+    <section class="screen hidden" id="screen-stats">
+      <section class="stats-hero">
+        <div><span>学期实际课时</span><strong>268</strong><small>最终执行口径</small></div>
+        <div class="stats-mini"><b id="statWeekHours">0h</b><span>当前周</span></div>
+      </section>
+
+      <section class="section-block">
+        <div class="section-head"><div><h2>16周课时</h2><p>点击周次可直接跳回该周课程表</p></div></div>
+        <div class="week-chart" id="weekChart"></div>
+      </section>
+
+      <section class="section-block">
+        <div class="section-head"><div><h2>班级负荷</h2><p>每个班级固定一种颜色</p></div></div>
+        <div class="load-list" id="classLoad"></div>
+      </section>
+
+      <section class="section-block">
+        <div class="section-head"><div><h2>课程结构</h2><p>课程课时在全学期中的占比</p></div></div>
+        <div class="course-list" id="courseLoad"></div>
+      </section>
+
+      <section class="rule-card"><b>第16周规则</b><p>数字媒体技术2501进行《用户界面设计综合实训》。周一至周五1–6节为实训占用，仅7–8节可正常安排常规课程；周一7–8节《用户界面设计》保留。</p></section>
+    </section>
+
+    <section class="screen hidden" id="screen-all">
+      <section class="search-card">
+        <div class="search-input-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input id="keyword" placeholder="搜索课程、班级、教室"></div>
+        <div class="filter-row"><select id="weekFilter"><option value="all">全部周次</option></select><select id="classFilter"><option value="all">全部班级</option></select><select id="courseFilter"><option value="all">全部课程</option></select></div>
+      </section>
+      <div class="result-head"><h2>课程明细</h2><span id="resultCount">0 条</span></div>
+      <div class="all-list" id="allList"></div>
+    </section>
+  </main>
+</div>
+
+<nav class="tabbar" aria-label="主导航">
+  <button class="tab-item active" data-screen="schedule" type="button"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 3v4M16 3v4M4 10h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>课程表</span></button>
+  <button class="tab-item" data-screen="stats" type="button"><svg viewBox="0 0 24 24"><path d="M5 19V11M12 19V5M19 19v-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>统计</span></button>
+  <button class="tab-item" data-screen="all" type="button"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>全部</span></button>
+</nav>
+
+<div class="sheet-mask" id="lessonMask" aria-hidden="true">
+  <section class="sheet lesson-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head"><div id="sheetTags"></div><button class="sheet-close" id="lessonClose" type="button">×</button></div>
+    <h2 id="sheetCourse">课程</h2>
+    <p class="sheet-class" id="sheetClass">班级</p>
+    <div class="detail-list">
+      <div><span>日期</span><b id="sheetDate">—</b></div>
+      <div><span>节次</span><b id="sheetPeriod">—</b></div>
+      <div><span>地点</span><b id="sheetLocation">—</b></div>
+      <div><span>教学班</span><b id="sheetGroup">—</b></div>
+      <div><span>备注</span><b id="sheetNote">—</b></div>
     </div>
-    <nav class="segmented"><button class="active" data-view="overview">概览</button><button data-view="week">本周</button><button data-view="all">全部</button></nav>
   </section>
+</div>
 
-  <section class="view card section" id="view-overview">
-    <div class="section-head"><div><h2>学期概览</h2><p>周课时、班级负荷和课程结构一屏掌握。</p></div></div>
-    <div class="metrics" id="metrics"></div>
-    <div class="section-head spaced"><div><h2>每周课时</h2><p>点击柱形直接进入该周课表。</p></div></div>
-    <div class="week-bars" id="weekBars"></div>
-    <div class="split spaced">
-      <div><div class="section-head"><div><h2>班级负荷对比</h2><p>不同班级固定使用不同颜色。</p></div></div><div class="class-load" id="classLoad"></div></div>
-      <div><div class="section-head"><div><h2>课程结构</h2><p>查看三门课程在总课时中的占比。</p></div></div><div class="course-summary" id="courseSummary"></div></div>
-    </div>
+<div class="sheet-mask" id="weekMask" aria-hidden="true">
+  <section class="sheet week-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head"><div><h2>选择教学周</h2><p>2026–2027学年第1学期</p></div><button class="sheet-close" id="weekClose" type="button">×</button></div>
+    <div class="week-grid-picker" id="weekGridPicker"></div>
   </section>
-
-  <section class="view card section hidden" id="view-week">
-    <div class="section-head"><div><h2>本周上什么课</h2><p>每日卡片、时间轴与周矩阵联动。</p></div><div class="week-switch"><button id="prevWeek" class="icon-btn">‹</button><select id="weekSelect"></select><button id="nextWeek" class="icon-btn">›</button></div></div>
-    <div class="day-strip" id="dayStrip"></div>
-    <div class="split spaced">
-      <div class="subcard"><div class="card-head"><h3 id="dayTitle">当天课程</h3><span id="dayMeta">—</span></div><div id="dayTimeline"></div></div>
-      <div class="subcard"><div class="card-head"><h3>本周摘要</h3><span>一眼看懂强度</span></div><div id="weekDigest"></div></div>
-    </div>
-    <div class="grid-scroll spaced"><div class="week-grid" id="weekGrid"></div></div>
-    <div class="special">当前显示的是最终执行课表：已扣除节假日、校运会、新生军训，并应用第16周 UI 综合实训周规则。</div>
-  </section>
-
-  <section class="view card section hidden" id="view-all">
-    <div class="section-head"><div><h2>全部课程明细</h2><p>按周次、班级、课程或关键词快速查询。</p></div></div>
-    <div class="filters"><select id="filterWeek"><option value="all">全部周次</option></select><select id="filterClass"><option value="all">全部班级</option></select><select id="filterCourse"><option value="all">全部课程</option></select><input id="filterKeyword" placeholder="教学班 / 地点 / 备注"></div>
-    <div class="table-wrap"><table><thead><tr><th>周次</th><th>日期</th><th>节次</th><th>课程</th><th>教学班</th><th>班级</th><th>地点</th><th>备注</th></tr></thead><tbody id="allTable"></tbody></table></div>
-  </section>
-</main>
-
-<nav class="bottom-nav"><button class="active" data-view="overview">概览</button><button data-view="week">本周</button><button data-view="all">全部</button></nav>
-
-<div class="sheet-mask" id="sheetMask"><section class="sheet"><div class="sheet-handle"></div><div class="sheet-head"><div><div id="sheetTags"></div><h2 id="sheetCourse">课程</h2><p id="sheetClass">班级</p></div><button id="sheetClose" aria-label="关闭">×</button></div><div class="kv"><span>日期</span><b id="sheetDate"></b></div><div class="kv"><span>节次</span><b id="sheetPeriod"></b></div><div class="kv"><span>地点</span><b id="sheetLocation"></b></div><div class="kv"><span>教学班</span><b id="sheetGroup"></b></div><div class="kv"><span>备注</span><b id="sheetNote"></b></div></section></div>
+</div>
 
 <script src="./schedule-data.js"></script>
 <script src="./app.js"></script>
