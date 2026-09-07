@@ -1,11 +1,16 @@
 {
-  "name": "何扬帆 · 每周课程表",
+  "name": "我的课表",
   "short_name": "我的课表",
   "description": "2026–2027学年第1学期课程表",
   "lang": "zh-CN",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
   "background_color": "#f5f7fb",
-  "theme_color": "#f5f7fb"
+  "theme_color": "#f5f7fb",
+  "icons": [
+    {"src":"./logo.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
 }
