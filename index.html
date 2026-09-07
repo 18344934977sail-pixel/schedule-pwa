@@ -3,82 +3,72 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f5f7fb">
+<meta name="theme-color" content="#F5F7FB">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="我的课表">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="./logo.svg">
+<link rel="apple-touch-icon" href="./logo.svg">
 <link rel="stylesheet" href="./app.css">
 <title>我的课表</title>
 </head>
 <body>
-<div class="app" id="app">
-  <div class="topbar">
-    <div class="brand"><img src="./logo.svg" alt="我的课表"><div><h1>我的课表</h1><p>2026–2027学年第1学期</p></div></div>
-    <div class="today-pill" id="todayLabel">—</div>
-  </div>
+<main class="app">
+  <header class="topbar card">
+    <div class="brand"><img src="./logo.svg" alt="我的课表"><div><h1>我的课表</h1><p>2026–2027 学年第1学期</p></div></div>
+    <div class="topmeta"><span class="pill" id="todayLabel">今天</span><span class="pill" id="weekLabel">第—周</span></div>
+  </header>
 
-  <section class="hero">
-    <div class="hero-main">
-      <div><div class="eyebrow">当前教学进度</div><h2 id="heroWeek">第—周</h2><div class="sub" id="heroRange">—</div></div>
-      <div class="hero-metric"><strong id="heroHours">0</strong><span>本周实际课时</span></div>
+  <section class="hero card">
+    <div class="hero-grid">
+      <div class="current-card">
+        <div class="eyebrow" id="heroEyebrow">当前教学周</div>
+        <h2 id="heroWeek">第—周</h2>
+        <p id="heroRange">—</p>
+        <div class="hero-stats"><div><strong id="heroHours">0</strong><span>本周课时</span></div><div><strong id="heroSessions">0</strong><span>本周课次</span></div><div><strong id="heroBusy">—</strong><span>最忙日</span></div></div>
+      </div>
+      <div class="hero-side">
+        <article class="focus-card"><div class="card-head"><h3>今天课程</h3><span id="todayHint">自动更新</span></div><div id="todayClasses"></div></article>
+        <article class="focus-card"><div class="card-head"><h3>下一节课程</h3><span>点击查看详情</span></div><div id="nextClass"></div></article>
+      </div>
     </div>
-    <div class="progress"><i id="termProgress"></i></div>
-    <div class="hero-foot"><span>第1周</span><span id="progressText">学期进度</span><span>第16周</span></div>
+    <nav class="segmented"><button class="active" data-view="overview">概览</button><button data-view="week">本周</button><button data-view="all">全部</button></nav>
   </section>
 
-  <div class="segment" role="tablist">
-    <button type="button" data-view="today" class="active">今日</button>
-    <button type="button" data-view="week">本周</button>
-    <button type="button" data-view="term">全学期</button>
-  </div>
-
-  <div class="toolrow"><span style="font-size:11px;color:#7a8494" id="filterSummary">执行课表 · 268课时</span><button type="button" id="filterBtn">筛选</button></div>
-  <div class="panel filterbox" id="filterBox">
-    <label>班级<select id="classFilter"><option value="-1">全部班级</option></select></label>
-    <label>课程<select id="courseFilter"><option value="-1">全部课程</option></select></label>
-    <label style="grid-column:1/-1">搜索<input id="searchInput" placeholder="教室 / 班级 / 课程"></label>
-  </div>
-
-  <section class="panel week-strip section" id="weekStrip"></section>
-
-  <div id="todayView">
-    <div class="section-title section"><h3>当天课程</h3><span id="daySummary">—</span></div>
-    <section class="panel timeline" id="dayTimeline"></section>
-    <div class="section-title section"><h3>下一节</h3><span>按实际执行课表</span></div>
-    <section class="panel next-card" id="nextClass"></section>
-  </div>
-
-  <div id="weekView" class="hidden">
-    <div class="desktop-grid">
-      <div>
-        <div class="section-title section"><h3>本周课程分布</h3><span id="weekSummary">—</span></div>
-        <section class="panel timeline" id="weekTimeline"></section>
-      </div>
-      <div>
-        <div class="section-title section"><h3>16周课时强度</h3><span>点击柱形切换周次</span></div>
-        <section class="panel week-bars" id="weekBars"></section>
-        <div class="kpis">
-          <section class="panel kpi"><strong id="kpiSessions">0</strong><span>本周课次</span></section>
-          <section class="panel kpi"><strong id="kpiCourses">0</strong><span>涉及课程</span></section>
-          <section class="panel kpi"><strong id="kpiClasses">0</strong><span>涉及班级</span></section>
-        </div>
-      </div>
+  <section class="view card section" id="view-overview">
+    <div class="section-head"><div><h2>学期概览</h2><p>周课时、班级负荷和课程结构一屏掌握。</p></div></div>
+    <div class="metrics" id="metrics"></div>
+    <div class="section-head spaced"><div><h2>每周课时</h2><p>点击柱形直接进入该周课表。</p></div></div>
+    <div class="week-bars" id="weekBars"></div>
+    <div class="split spaced">
+      <div><div class="section-head"><div><h2>班级负荷对比</h2><p>不同班级固定使用不同颜色。</p></div></div><div class="class-load" id="classLoad"></div></div>
+      <div><div class="section-head"><div><h2>课程结构</h2><p>查看三门课程在总课时中的占比。</p></div></div><div class="course-summary" id="courseSummary"></div></div>
     </div>
-  </div>
+  </section>
 
-  <div id="termView" class="hidden">
-    <div class="section-title section"><h3>全学期结构</h3><span>实际执行口径</span></div>
-    <div class="term-grid">
-      <section class="panel donut-card"><div class="donut-wrap"><div class="donut"></div><div class="legend" id="courseLegend"></div></div></section>
-      <section class="panel class-bars" id="classBars"></section>
+  <section class="view card section hidden" id="view-week">
+    <div class="section-head"><div><h2>本周上什么课</h2><p>每日卡片、时间轴与周矩阵联动。</p></div><div class="week-switch"><button id="prevWeek" class="icon-btn">‹</button><select id="weekSelect"></select><button id="nextWeek" class="icon-btn">›</button></div></div>
+    <div class="day-strip" id="dayStrip"></div>
+    <div class="split spaced">
+      <div class="subcard"><div class="card-head"><h3 id="dayTitle">当天课程</h3><span id="dayMeta">—</span></div><div id="dayTimeline"></div></div>
+      <div class="subcard"><div class="card-head"><h3>本周摘要</h3><span>一眼看懂强度</span></div><div id="weekDigest"></div></div>
     </div>
-    <div class="special"><b>第16周实训规则：</b>数字媒体技术2501进行《用户界面设计综合实训》。教师周一至周五1–6节带实训，只有7–8节可以正常上常规课；第16周周一7–8节《用户界面设计》正常保留。</div>
-    <div class="section-title section"><h3>全部课程明细</h3><span id="allSummary">—</span></div>
-    <section class="panel all-list" id="allList"></section>
-  </div>
-</div>
+    <div class="grid-scroll spaced"><div class="week-grid" id="weekGrid"></div></div>
+    <div class="special">当前显示的是最终执行课表：已扣除节假日、校运会、新生军训，并应用第16周 UI 综合实训周规则。</div>
+  </section>
+
+  <section class="view card section hidden" id="view-all">
+    <div class="section-head"><div><h2>全部课程明细</h2><p>按周次、班级、课程或关键词快速查询。</p></div></div>
+    <div class="filters"><select id="filterWeek"><option value="all">全部周次</option></select><select id="filterClass"><option value="all">全部班级</option></select><select id="filterCourse"><option value="all">全部课程</option></select><input id="filterKeyword" placeholder="教学班 / 地点 / 备注"></div>
+    <div class="table-wrap"><table><thead><tr><th>周次</th><th>日期</th><th>节次</th><th>课程</th><th>教学班</th><th>班级</th><th>地点</th><th>备注</th></tr></thead><tbody id="allTable"></tbody></table></div>
+  </section>
+</main>
+
+<nav class="bottom-nav"><button class="active" data-view="overview">概览</button><button data-view="week">本周</button><button data-view="all">全部</button></nav>
+
+<div class="sheet-mask" id="sheetMask"><section class="sheet"><div class="sheet-handle"></div><div class="sheet-head"><div><div id="sheetTags"></div><h2 id="sheetCourse">课程</h2><p id="sheetClass">班级</p></div><button id="sheetClose" aria-label="关闭">×</button></div><div class="kv"><span>日期</span><b id="sheetDate"></b></div><div class="kv"><span>节次</span><b id="sheetPeriod"></b></div><div class="kv"><span>地点</span><b id="sheetLocation"></b></div><div class="kv"><span>教学班</span><b id="sheetGroup"></b></div><div class="kv"><span>备注</span><b id="sheetNote"></b></div></section></div>
+
 <script src="./schedule-data.js"></script>
 <script src="./app.js"></script>
 </body>
