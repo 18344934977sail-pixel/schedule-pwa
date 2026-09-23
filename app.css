@@ -28,3 +28,15 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .week-slide-left{animation:weekSlideL .23s cubic-bezier(.2,.8,.2,1)}.week-slide-right{animation:weekSlideR .23s cubic-bezier(.2,.8,.2,1)}
 @keyframes weekSlideL{from{opacity:.45;transform:translateX(18px)}to{opacity:1;transform:none}}@keyframes weekSlideR{from{opacity:.45;transform:translateX(-18px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* v17: remove duplicated controls and strengthen teacher-first hierarchy */
+.week-status{cursor:default;box-shadow:none;background:#EEF2F7}
+.week-status:active{transform:none}
+.lesson-info .class-pill{font-size:12px;padding:7px 10px;margin-top:0}
+.lesson-info h3{margin-top:9px}
+.status-进行中{background:#E8F7EE;color:#1E7A45;font-weight:800}
+.status-待上课{background:#EEF3FF;color:#3E64C7;font-weight:800}
+.status-已结束{background:#F1F3F6;color:#7B8492;font-weight:700}
+.week-panel-actions{display:none}
+#currentWeekBtn.hidden{display:none!important}
+#todaySpecialSection.hidden,#weekSpecialSection.hidden{display:none!important}
