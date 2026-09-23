@@ -25,49 +25,60 @@
 
   <main>
     <section class="screen" id="screen-schedule">
-      <section class="focus-card" id="focusCard">
+      <section class="focus-card pressable" id="focusCard">
         <div class="focus-top"><span class="eyebrow">下一节课程</span><span class="focus-status" id="nextStatus">—</span></div>
         <div id="nextLesson"></div>
       </section>
 
       <section class="section-block">
-        <div class="section-head"><div><h2>本周</h2><p id="weekRangeText">—</p></div><div class="week-summary" id="weekSummary">0 课时</div></div>
-        <div class="date-rail" id="dateRail"></div>
-      </section>
-
-      <section class="section-block">
-        <div class="section-head"><div><h2 id="dayTitle">今天课程</h2><p id="daySubtitle">—</p></div><button class="text-btn" id="goTodayBtn" type="button">今天</button></div>
+        <div class="section-head"><div><h2>今天</h2><p id="daySubtitle">—</p></div><button class="text-btn" id="goTodayBtn" type="button">回到今天</button></div>
         <div class="agenda" id="dayAgenda"></div>
       </section>
 
       <section class="section-block">
-        <div class="section-head"><div><h2>本周总览</h2><p>按天查看整周课程，不需要横向拖大表格</p></div></div>
-        <div class="week-overview" id="weekOverview"></div>
+        <div class="section-head"><div><h2>本周特殊安排</h2><p>调课、停课、实训周与普通课程分开展示</p></div></div>
+        <div class="special-list" id="todaySpecial"></div>
+      </section>
+
+      <section class="section-block">
+        <div class="section-head"><div><h2>冲突检查</h2><p>只按“周次 + 星期 + 节次”判断真正冲突</p></div></div>
+        <div id="todayConflict"></div>
       </section>
     </section>
 
     <section class="screen hidden" id="screen-stats">
-      <section class="stats-hero">
-        <div><span>最新课表已排课时</span><strong id="statTotalHours">0</strong><small id="statTotalNote">最新课表执行口径</small></div>
-        <div class="stats-mini"><b id="statWeekHours">0h</b><span>当前周</span></div>
+      <section class="week-panel" id="weekSwipeArea">
+        <div class="week-panel-head">
+          <div class="week-panel-title"><b id="selectedWeekTitle">第—周</b><span id="selectedWeekRange">—</span></div>
+          <div class="week-panel-actions">
+            <button class="week-arrow" id="prevWeekBtn" type="button" aria-label="上一周">‹</button>
+            <button class="current-week-btn" id="currentWeekBtn" type="button">本周</button>
+            <button class="week-arrow" id="nextWeekBtn" type="button" aria-label="下一周">›</button>
+          </div>
+        </div>
+        <div class="week-rail-free" id="weekRail"></div>
+        <div class="swipe-hint">左右滑动切换周次，也可以直接点任意教学周</div>
       </section>
 
       <section class="section-block">
-        <div class="section-head"><div><h2>16周课时</h2><p>点击周次可直接跳回该周课程表</p></div></div>
-        <div class="week-chart" id="weekChart"></div>
+        <div class="section-head"><div><h2>本周特殊安排</h2><p>特殊事件单独呈现，不与普通课程混排</p></div></div>
+        <div class="special-list" id="weekSpecial"></div>
       </section>
 
       <section class="section-block">
-        <div class="section-head"><div><h2>班级负荷</h2><p>每个班级固定一种颜色</p></div></div>
-        <div class="load-list" id="classLoad"></div>
+        <div class="section-head"><div><h2>周课表</h2><p id="weekHoursText">—</p></div></div>
+        <div class="date-rail" id="dateRail"></div>
       </section>
 
       <section class="section-block">
-        <div class="section-head"><div><h2>课程结构</h2><p>课程课时在全学期中的占比</p></div></div>
-        <div class="course-list" id="courseLoad"></div>
+        <div class="section-head"><div><h2 id="weekDayTitle">当天课程</h2><p id="weekDaySubtitle">—</p></div></div>
+        <div class="agenda" id="weekDayAgenda"></div>
       </section>
 
-      <section class="rule-card"><b>第16周规则</b><p>数字媒体技术2501进行《用户界面设计综合实训》。周一至周五1–6节为实训占用，仅7–8节可正常安排常规课程；周一7–8节《用户界面设计》保留。</p></section>
+      <section class="section-block">
+        <div class="section-head"><div><h2>整周总览</h2><p>按星期分组浏览本周全部课程</p></div></div>
+        <div class="week-overview" id="weekOverview"></div>
+      </section>
     </section>
 
     <section class="screen hidden" id="screen-all">
@@ -82,9 +93,9 @@
 </div>
 
 <nav class="tabbar" aria-label="主导航">
-  <button class="tab-item active" data-screen="schedule" type="button"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 3v4M16 3v4M4 10h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>课程表</span></button>
-  <button class="tab-item" data-screen="stats" type="button"><svg viewBox="0 0 24 24"><path d="M5 19V11M12 19V5M19 19v-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>统计</span></button>
-  <button class="tab-item" data-screen="all" type="button"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>全部</span></button>
+  <button class="tab-item active" data-screen="schedule" type="button"><svg viewBox="0 0 24 24"><path d="M7 3v3M17 3v3M5 8h14M6 5h12a2 2 0 0 1 2 2v12H4V7a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="14" r="2.2" fill="currentColor"/></svg><span>今天</span></button>
+  <button class="tab-item" data-screen="stats" type="button"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 3v4M16 3v4M4 10h16M8 14h2M12 14h2M16 14h1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>周课表</span></button>
+  <button class="tab-item" data-screen="all" type="button"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>全部课程</span></button>
 </nav>
 
 <div class="sheet-mask" id="lessonMask" aria-hidden="true">
@@ -107,7 +118,7 @@
   <section class="sheet week-sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-head"><div><h2>选择教学周</h2><p>2026–2027学年第1学期</p></div><button class="sheet-close" id="weekClose" type="button">×</button></div>
-    <div class="week-grid-picker" id="weekGridPicker"></div>
+    <button class="picker-current-btn" id="pickerCurrentBtn" type="button">回到当前周</button><div class="week-grid-picker" id="weekGridPicker"></div>
   </section>
 </div>
 
